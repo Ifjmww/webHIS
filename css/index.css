@@ -1,0 +1,64 @@
+*{
+	margin: 0px;
+	padding: 0px;
+	text-decoration: none;
+}
+#app{
+	width: 100%;
+	margin: 0px auto;
+	position: relative;
+}
+.header{
+	width: 100%;
+	height: 60px;
+	background-color: #409EFF;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 3;
+}
+.header .header-title{
+	width: 200px;
+	line-height: 60px;
+	text-align: center;
+	background-color:#3c80ff;
+	display: inline-block;
+}
+.header .header-title a{
+	color: white;
+	font-size: 18px;
+}
+.header .header-user{
+	width: 50px;
+	height: 40px;
+	text-align: center;
+	display: inline-block;
+	float: right;
+	margin-top: 10px;
+	margin-right: 15px;
+}
+.main{
+	width: 100%;
+	height: 1000px;
+	margin-top: 60px;
+	position: relative;
+}
+
+.main .nav{
+	width:200px ;
+	height: 100%;
+	position: fixed;
+	background-color: #606266;
+	overflow: auto;
+}
+.main .content{
+	width: calc(100% - 200px);
+	height: 100%;
+	margin-left:200px;
+	background-color:#55ffff;
+}
+.content .content-text{
+	font-size: 200px;
+	color: white;
+	text-align: center;
+}
