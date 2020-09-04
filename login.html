@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" type="text/css" href="./css/login.css"  >
+  <title>东软云医院HIS系统</title>
+</head>
+<body>
+  <div id="app"  @keyup.enter="checkup()" >
+      <div id="p">
+          系统登录
+      </div>
+      <el-input v-model="input" placeholder="请输入用户名" class="input" ></el-input>
+      <el-input v-model="pwd" placeholder="请输入密码"  class="input" style="top:200px" show-password></el-input>
+      <template>
+        <!-- `checked` 为 true 或 false -->
+        <el-checkbox v-model="checked" class="checkbox">记住密码</el-checkbox>
+      </template>
+      <el-button type="primary" @click="checkup()" class="submit">
+            
+            立即登录
+      </el-button>
+      <div class="footer">
+          <b>&copy;2020&nbsp;爱摸小猫咪队</b>
+      </div>
+      <!-- <div class="input">
+          
+      </div>
+      <div>
+          <el-input v-model="input" placeholder="请输入密码"></el-input>
+      </div>
+      <div class="checkbox">
+            
+      </div>
+      <div class="submit">
+        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+      <!-- </div> --> 
+    
+  </div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+          user:[{name:"root",password:"root"},{name:"cjw",password:"cjw123456"},
+                {name:"ncf",password:"ncf123456"}],
+          input:"",
+          pwd:"",
+          checked: true,
+          isflag:false
+      },
+      methods:{
+          checkup:function(){
+                if(this.input=="")
+                {
+                    alert("用户名不能为空！请重新输入")
+                    return 
+                }
+                if(this.pwd=="")
+                {
+                    alert("密码不能为空！请重新输入")
+                    return 
+                }
+                for(let i in this.user)
+                {
+                    let u=this.user[i]
+                    if(u.name==this.input){
+                        if(u.password==this.pwd)
+                        {
+                            this.isflag=true
+                            window.location.href="index.html"
+                            return 
+                        }
+                        if(u.password!=this.pwd)
+                        {
+                            alert('密码输入错误！请重新输入');
+                            return 
+                        }
+                    }  
+                }
+                if(this.isflag==false) 
+                {
+                    alert('该用户不存在！请重新输入');
+                    return 
+                }  
+                
+          }
+      }
+    })
+   
+  </script>
+</html>
