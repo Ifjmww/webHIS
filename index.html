@@ -5,6 +5,8 @@
   <!-- import CSS -->
   <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
   <link rel="stylesheet" href="css/index.css">
+  <script src="js/jquery-3.5.1.js"></script>
+  <script src="js/index.js"></script>
 </head>
 <body>
 	<div id="app">
@@ -27,42 +29,34 @@
 			<div class="nav">
 				<el-col>
 					<el-menu
-					      default-active="2"
-					      class="el-menu-vertical-demo"
-					      @open="handleOpen"
-					      @close="handleClose"
-					      background-color="#545c64"
-					      text-color="#fff"
-					      active-text-color="#ffd04b">
-						  <el-submenu index="1">
-						    <template slot="title">
-						      <i class="el-icon-s-home"></i>
-						      <span>挂号收费</span>
-						    </template>
-						    <el-menu-item-group>
-						      <el-menu-item index="1-1">选项1</el-menu-item>
-						      <el-menu-item index="1-2">选项2</el-menu-item>
-						    </el-menu-item-group>
-						    </el-submenu>
-						  		  					
-						  	<el-submenu index="2">
-						  	<template slot="title">
-						  	<i class="el-icon-user-solid"></i>
-						  	<span>门诊医生</span>
-						  	</template>
-						  	<el-menu-item-group>
-						  	<el-menu-item index="1-1">选项1</el-menu-item>
-						  	<el-menu-item index="1-2">选项2</el-menu-item>
-						  	<el-menu-item index="1-3">选项1</el-menu-item>
-						  	<el-menu-item index="1-4">选项2</el-menu-item>
-						  	<el-menu-item index="1-5">选项1</el-menu-item>
-						  	<el-menu-item index="1-6">选项2</el-menu-item>
-						  	<el-menu-item index="1-7">选项1</el-menu-item>
-						  	<el-menu-item index="1-8">选项2</el-menu-item>
-						  	<el-menu-item index="1-9">选项1</el-menu-item>
-						  	<el-menu-item index="1-10">选项2</el-menu-item>
-						  	</el-menu-item-group>
-						  	</el-submenu>
+					default-active="2"
+					class="el-menu-vertical-demo"
+					@open="handleOpen"
+					@close="handleClose"
+					background-color="#545c64"
+					text-color="#fff"
+					active-text-color="#ffd04b">
+							<el-submenu index="1">
+							<template slot="title">
+							<i class="el-icon-s-home"></i>
+							<span>挂号收费</span>
+							</template>
+							<el-menu-item-group>
+							<el-menu-item index="1-1" @click='selitem($event,"1-1")'>选项1</el-menu-item>
+							<el-menu-item index="1-2" @click='selitem($event,"1-2")'>选项1</el-menu-item>
+							</el-menu-item-group>
+							</el-submenu>
+											  		  					
+							<el-submenu index="2">
+							<template slot="title">
+							<i class="el-icon-user-solid"></i>
+							<span>门诊医生</span>
+							</template>
+							<el-menu-item-group>
+							<el-menu-item index="2-1" @click='selitem($event,"2-1")'>选项1</el-menu-item>
+							<el-menu-item index="2-2"  @click='selitem($event,"2-2")'>选项1</el-menu-item>
+							</el-menu-item-group>
+							</el-submenu>
 						  		  					  
 						  	<el-submenu index="3">
 						  	<template slot="title">
@@ -70,8 +64,8 @@
 						  	<span>医技处置</span>
 						  	</template>
 						  	<el-menu-item-group>
-						  	<el-menu-item index="1-1">选项1</el-menu-item>
-						  	<el-menu-item index="1-2">选项2</el-menu-item>
+						  	<el-menu-item index="3-1" @click='selitem($event,"3-1")'>选项1</el-menu-item>
+						  	<el-menu-item index="3-2" @click='selitem($event,"3-2")'>选项1</el-menu-item>
 						  	</el-menu-item-group>
 						  	</el-submenu>
 							
@@ -81,8 +75,8 @@
 						  	<span>药房管理</span>
 						  	</template>
 						  	<el-menu-item-group>
-						  	<el-menu-item index="1-1">选项1</el-menu-item>
-						  	<el-menu-item index="1-2">选项2</el-menu-item>
+						  	<el-menu-item index="4-1" @click='selitem($event,"4-1")'>选项1</el-menu-item>
+						  	<el-menu-item index="4-2" @click='selitem($event,"4-2")'>选项1</el-menu-item>
 						  	</el-menu-item-group>
 						  	</el-submenu>
 						  		  						  
@@ -92,8 +86,8 @@
 						  	<span>财务管理</span>
 						  	</template>
 						  	<el-menu-item-group>
-						  	<el-menu-item index="1-1">选项1</el-menu-item>
-						  	<el-menu-item index="1-2">选项2</el-menu-item>
+						  	<el-menu-item index="5-1" @click='selitem($event,"5-1")'>选项1</el-menu-item>
+						  	<el-menu-item index="5-2" @click='selitem($event,"5-2")'>选项1</el-menu-item>
 						  	</el-menu-item-group>
 						  	</el-submenu>
 						  		  							
@@ -103,17 +97,24 @@
 						  	<span>系统信息</span>
 						  	</template>
 						  	<el-menu-item-group>
-						  	<el-menu-item index="1-1">选项1</el-menu-item>
-						  	<el-menu-item index="1-2">选项2</el-menu-item>
+						  	<el-menu-item index="6-1" @click='selitem($event,"6-1")'>选项1</el-menu-item>
+						  	<el-menu-item index="6-2" @click='selitem($event,"6-2")'>选项1</el-menu-item>
 						  	</el-menu-item-group>
 						  	</el-submenu>
 					</el-menu>
 				</el-col>
 			</div>
 			<div class="content">
-				<div class="content-text">
-					主内容
-				</div>
+				<el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
+				  <el-tab-pane
+				    v-for="(item, index) in editableTabs"
+				    :key="item.name"
+				    :label="item.title"
+				    :name="item.name"
+				  >
+				    {{item.content}}
+				  </el-tab-pane>
+				</el-tabs>
 			</div>
 		</div>
 	</div>
@@ -124,10 +125,64 @@
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
   <script>
     new Vue({
-      el: '#app',
-      data: function() {
-        return { visible: false }
-      }
+		el: '#app',
+		data: {
+			editableTabsValue: '0-1',
+			editableTabs: [{
+			  title: 'Tab 1',
+			  name: '0-1',
+			  content: 'aaa'
+			}],
+			tabIndex: 1
+		},
+		methods:{
+			handleOpen(key, keyPath) {
+				console.log(key, keyPath);
+			},
+			handleClose(key, keyPath) {
+				console.log(key, keyPath);
+			},
+			selitem(e,index){
+				let renew=true
+				for(let i in this.editableTabs){
+					if(this.editableTabs[i].name==index){
+						renew=false
+						break
+					}
+				}
+				if(renew){
+					this.addTab("aaa",index)
+				}else{
+					this.editableTabsValue=index
+				}
+			},
+			addTab(targetTitle,targetName) {
+			  let newTabName = targetName;
+			  this.editableTabs.push({
+			    title: targetTitle+targetName,
+			    name: newTabName,
+			    content: 'New Tab content'
+			  });
+			  this.editableTabsValue = newTabName;
+			},
+			removeTab(targetName) {
+			  let tabs = this.editableTabs;
+			  let activeName = this.editableTabsValue;
+			  if (activeName === targetName) {
+			    tabs.forEach((tab, index) => {
+			      if (tab.name === targetName) {
+			        let nextTab = tabs[index + 1] || tabs[index - 1];
+			        if (nextTab) {
+			          activeName = nextTab.name;
+			        }
+			      }
+			    });
+			  }
+			  
+			  this.editableTabsValue = activeName;
+			  this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+			}
+	  }
     })
   </script>
 </html>
