@@ -7,24 +7,36 @@
 </head>
 <body>
   <div id="app">
-    <div style="margin-bottom: 20px;">
-      <el-button
-        size="small"
-        @click="addTab(editableTabsValue)"
-      >
-        add tab
-      </el-button>
-    </div>
-    <el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
-      <el-tab-pane
-        v-for="(item, index) in editableTabs"
-        :key="item.name"
-        :label="item.title"
-        :name="item.name"
-      >
-        {{item.content}}
-      </el-tab-pane>
-    </el-tabs>
+    <el-table
+        ref="multipleTable"
+        :data="tableData"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          label="日期"
+          width="120">
+          <template slot-scope="scope">{{ scope.row.date }}</template>
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="姓名"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="地址"
+          show-overflow-tooltip>
+        </el-table-column>
+      </el-table>
+      <div style="margin-top: 20px">
+        <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>
+        <el-button @click="toggleSelection()">取消选择</el-button>
+      </div>
   </div>
 </body>
   <!-- import Vue before Element -->
@@ -34,47 +46,59 @@
   <script>
     new Vue({
       el: '#app',
-      data: {
-              editableTabsValue: '3',
-              editableTabs: [{
-                title: 'Tab 1',
-                name: '1',
-                content: '<div v-show="isshow">商品名称：<input type="text" v-model="newname"/><br />商品价格：<input type="text" v-model="newprice"/><button @click="save">保存</button><button @click="isshow=false">取消</button></div>'
-              }, {
-                title: 'Tab 2',
-                name: '2',
-                content: 'Tab 2 content'
-              }],
-              tabIndex: 2
-          },
-          methods: {
-            addTab(targetName) {
-              let newTabName = ++this.tabIndex + '';
-              this.editableTabs.push({
-                title: 'New Tab'+this.tabIndex,
-                name: newTabName,
-                content: 'New Tab content'
-              });
-              this.editableTabsValue = newTabName;
-            },
-            removeTab(targetName) {
-              let tabs = this.editableTabs;
-              let activeName = this.editableTabsValue;
-              if (activeName === targetName) {
-                tabs.forEach((tab, index) => {
-                  if (tab.name === targetName) {
-                    let nextTab = tabs[index + 1] || tabs[index - 1];
-                    if (nextTab) {
-                      activeName = nextTab.name;
-                    }
-                  }
-                });
-              }
-              
-              this.editableTabsValue = activeName;
-              this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-            }
-          }
+           data() {
+             return {
+               tableData: [{
+                 date: '2016-05-03',
+                 name: '王小虎',
+                 address: '上海市普陀区金沙江路 1518 弄'
+               }, {
+                 date: '2016-05-02',
+                 name: '王小虎',
+                 address: '上海市普陀区金沙江路 1518 弄'
+               }, {
+                 date: '2016-05-04',
+                 name: '王小虎',
+                 address: '上海市普陀区金沙江路 1518 弄'
+               }, {
+                 date: '2016-05-01',
+                 name: '王小虎',
+                 address: '上海市普陀区金沙江路 1518 弄'
+               }, {
+                 date: '2016-05-08',
+                 name: '王小虎',
+                 address: '上海市普陀区金沙江路 1518 弄'
+               }, {
+                 date: '2016-05-06',
+                 name: '王小虎',
+                 address: '上海市普陀区金沙江路 1518 弄'
+               }, {
+                 date: '2016-05-07',
+                 name: '王小虎',
+                 address: '上海市普陀区金沙江路 1518 弄'
+               }],
+			   currentPage: 1,
+			         pageSize: 2,
+			         total: 7,
+               multipleSelection: []
+             }
+           },
+       
+           methods: {
+             toggleSelection(rows) {
+               if (rows) {
+                 rows.forEach(row => {
+                   this.$refs.multipleTable.toggleRowSelection(row);
+                 });
+               } else {
+                 this.$refs.multipleTable.clearSelection();
+               }
+             },
+             handleSelectionChange(val) {
+               this.multipleSelection = val;
+			   console.log(this.multipleSelection)
+             }
+           }
     })
   </script>
 </html>
