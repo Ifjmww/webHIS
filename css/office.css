@@ -1,0 +1,27 @@
+*{
+	margin: 0px;
+	padding: 0px;
+}
+#app{
+	margin: 10px;
+}
+.header{
+	width: 100%;
+	line-height: 60px;
+}
+.header .input{
+	margin-left: 20px;
+	float: left;
+}
+.header .searchoffice{
+	float: left;
+	margin-left: 50px;
+}
+.header .addoffice{
+	float: left;
+	margin-left: 50px;
+}
+.main{
+	width: 100%;
+	background-color: yellow;
+}

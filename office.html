@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="css/office.css" />
+</head>
+<body>
+  <div id="app">
+	  <el-dialog title="新增科室" :visible.sync="dialogFormVisible">
+	  		<el-form :model="formoffice">
+	  		    <el-form-item label="科室名称" >
+	  		      <el-input v-model="formoffice.value" autocomplete="off"></el-input>
+	  		    </el-form-item>
+	  		    <el-form-item label="科室类别" >
+	  		      <el-input v-model="formoffice.class" autocomplete="off"></el-input>
+	  		    </el-form-item>
+				<el-form-item label="科室类型" >
+				  <el-input v-model="formoffice.type" autocomplete="off"></el-input>
+				</el-form-item>
+	  		  </el-form>
+	    
+	    <div slot="footer" class="dialog-footer">
+			<el-button @click="dialogFormVisible = false">取 消</el-button>
+	    <el-button type="primary" @click="addoffice">确 定</el-button>
+	    </div>
+	  </el-dialog>
+	  
+	  <el-dialog title="科室信息" :visible.sync="dialogInfoVisible">
+		<div v-if="item!==null">
+			科室名称：{{item.value}}<br/>
+			科室分类：{{item.class}}<br/>
+			科室类型：{{item.type}}<br/>
+		</div>
+	    
+	    <div slot="footer" class="dialog-footer">
+	    <el-button type="primary" @click="dialogInfoVisible = false">确 定</el-button>
+	    </div>
+	  </el-dialog>
+	  <div class="header">
+		  <div class="input">
+			  <el-row class="demo-autocomplete">
+			  <el-col>
+			       <el-autocomplete
+			         class="inline-input"
+			         v-model="name"
+			         :fetch-suggestions="querySearch"
+			         placeholder="请输入内容"
+			         @select="handleSelect"
+			       ></el-autocomplete>
+			     </el-col>
+			  </el-row>
+		  </div>
+		  <div class="searchoffice">
+			  <el-button type="primary" icon="el-icon-search" @click="searchoffice">搜索科室</el-button>
+		  </div>
+		  <div class="addoffice">
+				<el-button type="primary" icon="el-icon-plus" @click="dialogFormVisible = true">新增科室</el-button>
+		  </div>
+		 
+	  </div>
+	  <div class="main">
+	  </div>
+  </div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+		  restaurants: [],
+		  name: '',
+		  item:null,
+		  dialogInfoVisible: false,
+		  dialogFormVisible: false,
+		  formoffice:{
+			  'value':"",
+			  'class':"",
+			  'type':""
+		  }
+	  },
+    methods: {
+      querySearch(queryString, cb) {
+              var restaurants = this.restaurants;
+              var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+              // 调用 callback 返回建议列表的数据
+              cb(results);
+            },
+      createFilter(queryString) {
+              return (restaurant) => {
+                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+              };
+      },
+      loadAll() {
+        return [
+			{"value":"心内科","class":"内科","type":"临床"},
+			{"value":"肝胆胰内科","class":"内科","type":"临床"},
+			{"value":"神经内科","class":"内科","type":"临床"},
+			{"value":"呼吸内科","class":"内科","type":"临床"},
+			{"value":"神经外科","class":"外科","type":"临床"},
+			{"value":"泌尿外科","class":"外科","type":"临床"},
+			{"value":"脑外科","class":"外科","type":"临床"},
+			{"value":"心外科","class":"外科","type":"临床"},
+			{"value":"眼科","class":"五官科","type":"临床"},
+			{"value":"耳鼻喉科","class":"五官科","type":"临床"},
+        ];
+      },
+      handleSelect(selitem) {
+        this.item=selitem
+      },
+	  searchoffice:function(){
+	  	if(this.item!=null&&this.item.value==this.name){
+			this.dialogInfoVisible = true
+		}else{
+			this.$message.error('未找到对应科室');
+		}
+	  },
+	  addoffice:function(){
+		  if(this.formoffice.value==""||this.formoffice.class==""||this.formoffice.type==""){
+			  this.$message.error('字段不能为空值');
+		  }else{
+		  this.dialogFormVisible = false
+		  this.restaurants.push(this.formoffice)
+		  this.form.value=""
+		  this.form.class=""
+		  this.form.type=""
+		  }
+	  }
+    },
+    mounted() {
+      this.restaurants = this.loadAll();
+    },
+	
+    })
+  </script>
+</html>

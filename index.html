@@ -14,15 +14,19 @@
 			<div class="header-title">
 				<a href="index.html"><h5>东软云医院HIS系统</h5></a>
 			</div>
+		
 			<div class="header-user">
 				<el-dropdown>
 				    <el-avatar icon="el-icon-user-solid el-icon-arrow-down"></el-avatar>
 				  <el-dropdown-menu slot="dropdown">
 				    <el-dropdown-item><a href="#">个人中心</a></el-dropdown-item>
 				    <el-dropdown-item><a href="#">修改密码</a></el-dropdown-item>
-				    <el-dropdown-item><a href="#">退出系统</a></el-dropdown-item>
+				    <el-dropdown-item><a @click="logout">退出系统</a></el-dropdown-item>
 				  </el-dropdown-menu>
 				</el-dropdown>
+			</div>
+			<div class="username">
+				{{username}}<br/>欢迎您
 			</div>
 		</div>
 		<div class="main">
@@ -33,9 +37,7 @@
 					class="el-menu-vertical-demo"
 					@open="handleOpen"
 					@close="handleClose"
-					background-color="#545c64"
-					text-color="#fff"
-					active-text-color="#ffd04b">
+					>
 							<el-submenu index="1">
 							<template slot="title">
 							<i class="el-icon-s-home"></i>
@@ -112,30 +114,73 @@
 				    :label="item.title"
 				    :name="item.name"
 				  >
-				    {{item.content}}
+				    <iframe :src="item.content" style="width:100%;height:800px;border:none;"></iframe>
 				  </el-tab-pane>
 				</el-tabs>
 			</div>
 		</div>
+		<div class="demoTab1">选项卡一</div>
 	</div>
 </body>
   <!-- import Vue before Element -->
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-cookies@1.7.4/vue-cookies.js"></script>
   <!-- import JavaScript -->
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
   <script>
     new Vue({
 		el: '#app',
 		data: {
+			nameindex:[
+				{index:"0-1",name:"吉大一院",html:"http://www.baidu.com"},
+				{index:"1-1",name:"选项一",html:"login.html"}
+			],
 			editableTabsValue: '0-1',
 			editableTabs: [{
-			  title: 'Tab 1',
+			  title: '默认页',
 			  name: '0-1',
-			  content: 'aaa'
+			  content: 'office.html'
 			}],
-			tabIndex: 1
+			tabIndex: 1,
+			username:"",
+			intervalId:null,
+			time: 0
+		},
+		mounted:function(){
+					this.init()
 		},
 		methods:{
+			starttime:function(num,str) {
+			          // 计时器正在进行中，退出函数
+			          if (this.intervalId != null) { 
+			            return 
+			          };
+			          // 计时器为空，操作
+			          this.intervalId = setInterval(() => {
+			            this.time += 1
+						if(this.time==num){
+							clearInterval(this.intervalId)//清除计时器
+							this.intervalId = null;//设置为null 
+							this.time=0
+							window.location.href=str
+						}
+						console.log(this.time)
+			          }, 1000)
+			        },
+			init:function(){
+				if(this.$cookies.isKey("islogin")){
+					this.username=this.$cookies.get("islogin")
+				}else{
+					this.open("请先登录！")
+					this.starttime(2,"login.html");
+				}
+			},
+			open:function(str){
+				this.$message(str)
+			},
+			relocate:function(str){
+				window.location.href=str
+			},
 			handleOpen(key, keyPath) {
 				console.log(key, keyPath);
 			},
@@ -151,17 +196,33 @@
 					}
 				}
 				if(renew){
-					this.addTab("aaa",index)
+					this.addTab(index)
 				}else{
 					this.editableTabsValue=index
 				}
 			},
-			addTab(targetTitle,targetName) {
+			logout:function(){
+				this.$cookies.remove("islogin")
+				this.open('用户退出')	
+				this.starttime(2,"login.html");
+
+			},
+			addTab(targetName) {
 			  let newTabName = targetName;
+			  let newTitle="untitle"
+			  let newcontent=null
+			  for(let i in this.nameindex){
+				  if(this.nameindex[i].index==newTabName){
+					  newTitle=this.nameindex[i].name
+					  newcontent=this.nameindex[i].html
+					  console.log(newcontent)
+					  break
+				  }
+			  }
 			  this.editableTabs.push({
-			    title: targetTitle+targetName,
+			    title: newTitle,
 			    name: newTabName,
-			    content: 'New Tab content'
+				content:newcontent
 			  });
 			  this.editableTabsValue = newTabName;
 			},
