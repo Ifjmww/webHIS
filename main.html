@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bootstrap 实例</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <style>
+      .carousel-inner img {
+        width:100%;
+    }
+    #aaa{
+    text-decoration:none;
+      color:white;
+    }
+    .cjw{
+      margin-left:890px;
+    }
+  </style>
+</head>
+<body  background="img/bg.png" style="background-size:100% 100% ; background-attachment: fixed">
+
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
+        <a class="navbar-brand" href="#">东软HIS</a>
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">医院首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">医院概况</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">门诊管理</a>
+          </li>
+          
+          <!-- Dropdown -->
+          <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                人才培养
+                </a>
+                <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">本科生教育</a>
+                <a class="dropdown-item" href="#">研究生教育</a>
+                <a class="dropdown-item" href="#">在线课堂</a>
+                </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">联系我们</a>
+          </li>
+          
+        </ul>
+        <div>
+          <button button class="btn btn-success  navbar-right  cjw" type="button"  >
+            <a href="login.html" id="aaa">Sign in</a>  
+          </button>
+        </div>
+        
+        
+        
+      </nav>
+      
+      <div class="container">
+          <br><br><br>
+        <div id="demo" class="carousel slide" data-ride="carousel">
+        <!-- 指示符 -->
+        <ul class="carousel-indicators">
+          <li data-target="#demo" data-slide-to="0" class="active"></li>
+          <li data-target="#demo" data-slide-to="1"></li>
+          <li data-target="#demo" data-slide-to="2"></li>
+        </ul>
+        <!-- 轮播图片 -->
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <a href="http://www.jdyy.cn/index.php/index/news/id/14654.html">
+              <img src="img/1.jpg"  class="rounded">
+            </a>
+          </div>
+          <div class="carousel-item">
+            <a href="https://news.jlu.edu.cn/info/1211/51206.htm">
+              <img src="img/2.jpg" class="rounded">
+            </a>
+          </div>
+          <div class="carousel-item">
+            <a href="https://news.jlu.edu.cn/info/1021/50433.htm">
+              <img src="img/3.jpg"  class="rounded">
+            </a>
+          </div>
+        </div>
+        <!-- 左右切换按钮 -->
+        <a class="carousel-control-prev" href="#demo" data-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#demo" data-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </a>
+    
+        </div>
+    </div>
+    
+    <br>
+    <div class="container">
+       
+      <ul class="list-group">
+        <a href="http://www.jdyy.cn/index.php/index/nlist/id/91.html" class="list-group-item active">
+          <h6 class="list-group-item-heading">
+            医院快讯
+          </h6>
+        </a>
+          <li class="list-group-item">
+            <a href="http://www.jdyy.cn/index.php/index/news/id/14473.html"><strong>[置顶]</strong>机关教工第一党支部召开“七一”组织生活会暨支部党员大会</a>
+          <img src="data:image/gif;base64,R0lGODlhHAALAJEAAP////+aAP4BAgAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQEMgD/ACwAAAAAHAALAAACKYQRqct836IMzyR0Z6vYUu1UGYKBl/hRpcllrqlCsMSt81mX+Z7jfF0AACH5BAUyAAIALAsAAgAEAAUAAAIHFA6iaLpXAAAh+QQFMgACACwQAAIABwAFAAACCoRkmLsHBpF0ogAAIfkEBTIAAgAsBQACABIABQAAAgiMj6nL7Q9hAQAh+QQFMgACACwFAAIAEgAFAAACFIRuAquI3JJrytia8tsyRplBoFAAADs=" width="28" height="11" >
+    
+        </li>
+          <li class="list-group-item">
+          <a href="http://www.jdyy.cn/index.php/index/news/id/14046.html"><strong>[置顶]</strong>吉大一院疫情期间就诊须知</a>
+          <img src="data:image/gif;base64,R0lGODlhHAALAJEAAP////+aAP4BAgAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQEMgD/ACwAAAAAHAALAAACKYQRqct836IMzyR0Z6vYUu1UGYKBl/hRpcllrqlCsMSt81mX+Z7jfF0AACH5BAUyAAIALAsAAgAEAAUAAAIHFA6iaLpXAAAh+QQFMgACACwQAAIABwAFAAACCoRkmLsHBpF0ogAAIfkEBTIAAgAsBQACABIABQAAAgiMj6nL7Q9hAQAh+QQFMgACACwFAAIAEgAFAAACFIRuAquI3JJrytia8tsyRplBoFAAADs=" width="28" height="11" >
+    
+        </li>
+          <li class="list-group-item">
+          <a href="http://www.jdyy.cn/index.php/index/news/id/14729.html">迎难而上，永攀高峰——吉林省最小年龄单倍体移植患儿顺利出院</a>
+          <img src="data:image/gif;base64,R0lGODlhHAALAJEAAP////+aAP4BAgAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQEMgD/ACwAAAAAHAALAAACKYQRqct836IMzyR0Z6vYUu1UGYKBl/hRpcllrqlCsMSt81mX+Z7jfF0AACH5BAUyAAIALAsAAgAEAAUAAAIHFA6iaLpXAAAh+QQFMgACACwQAAIABwAFAAACCoRkmLsHBpF0ogAAIfkEBTIAAgAsBQACABIABQAAAgiMj6nL7Q9hAQAh+QQFMgACACwFAAIAEgAFAAACFIRuAquI3JJrytia8tsyRplBoFAAADs=" width="28" height="11" >
+    
+        </li>
+          <li class="list-group-item">
+              <span class="badge"></span>
+              <a href="http://www.jdyy.cn/index.php/index/news/id/14727.html">我院在2020年吉林省科普讲解大赛荣获佳绩</a>
+          </li>
+      </ul>
+    
+        <br>
+    
+      <ul class="list-group">
+        <a href="http://www.jdyy.cn/index.php/index/nlist/id/92.html" class="list-group-item active">
+          <h6 class="list-group-item-heading">
+            招标公告
+          </h6>
+          
+        </a>
+          <li class="list-group-item">
+          <a href="http://www.jdyy.cn/index.php/index/news/id/14762.html"><strong>[置顶]</strong>吉林大学第一医院20-095产品介绍会公告</a>
+            <img src="data:image/gif;base64,R0lGODlhHAALAJEAAP////+aAP4BAgAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQEMgD/ACwAAAAAHAALAAACKYQRqct836IMzyR0Z6vYUu1UGYKBl/hRpcllrqlCsMSt81mX+Z7jfF0AACH5BAUyAAIALAsAAgAEAAUAAAIHFA6iaLpXAAAh+QQFMgACACwQAAIABwAFAAACCoRkmLsHBpF0ogAAIfkEBTIAAgAsBQACABIABQAAAgiMj6nL7Q9hAQAh+QQFMgACACwFAAIAEgAFAAACFIRuAquI3JJrytia8tsyRplBoFAAADs=" width="28" height="11" >
+        </li>
+          <li class="list-group-item">
+          <a href="http://www.jdyy.cn/index.php/index/news/id/14758.html">吉林大学第一医院20-094产品介绍会公告</a>
+        </li>
+          <li class="list-group-item">
+          <a href="http://www.jdyy.cn/index.php/index/news/id/14752.html">吉林大学第一医院二部医用气体采购项目招标公告</a>
+        </li>
+          <li class="list-group-item">
+              <span class="badge"></span>
+              <a href="http://www.jdyy.cn/index.php/index/news/id/14751.html">吉林大学第一医院二部物资-2020-05二次报名公告</a>
+          </li>
+      </ul>
+    
+        <br><br><br>
+    
+    </div>
+
+</body>
+</html>
