@@ -121,7 +121,7 @@
 			  		width="240">
 					<template slot-scope="scope">
 			  		<el-button type="primary" @click="handleEdit(scope.$index)">修改</el-button>
-			  		<el-button type="danger" @click="handleRemove(scope.$index)">删除</el-button>
+					<el-button type="danger" @click="handleRemove(scope.$index)">删除</el-button>
 			  		</template>
 					</el-table-column>
 			    </el-table>
@@ -136,10 +136,7 @@
 					  :total="parseInt(total)">
 					</el-pagination>
 				</div>
-			    <div style="margin-top: 20px">
-			      <el-button @click="toggleSelection([offices[1], offices[2]])">切换第二、第三行的选中状态</el-button>
-			      <el-button @click="toggleSelection()">取消选择</el-button>
-			    </div>
+				<el-button type="primary" @click="multipleremove">批量删除</el-button>
 		  </div>
 		  
 	  </div>
@@ -162,6 +159,7 @@
 		  opclass:"",
 		  optype:'',
 		  multipleSelection: [],
+		  visible:false,
 		  dialogInfoVisible: false,
 		  dialogFormVisible: false,
 		  dialogUpdateVisible: false,
@@ -217,6 +215,17 @@
 			this.$message.error('未找到对应科室');
 		}
 	  },
+	  multipleremove:function(){
+		  for(let i in this.multipleSelection){
+			  for(let j in this.offices){
+				  if(this.offices[j].value==this.multipleSelection[i].value){
+					  this.offices.splice(j,1)
+					  break
+				  }
+			  }
+		  }
+		  console.log(this.multipleSelection)
+	  },
 	  addoffice:function(){
 		  if(this.formoffice.value==""||this.formoffice.class==""||this.formoffice.type==""){
 			  this.$message.error('字段不能为空值');
@@ -258,7 +267,22 @@
 			  this.dialogUpdateVisible=true
 	        },
 	  handleRemove(index) {
+		  this.$confirm("确定要删?", "提示", {
+		    confirmButtonText: '确定',
+		    cancelButtonText: '取消',
+		    type: 'warning'
+		  }).then(() => {
 	        this.offices.splice(index,1)
+		    this.$message({
+		      type: 'success',
+		      message: '删除成功!'
+		    });
+		  }).catch(() => {
+		    this.$message({
+		      type: 'info',
+		      message: '已取消删除'
+		    });          
+		  });
 	  },
 	  toggleSelection(rows) {
 	          if (rows) {

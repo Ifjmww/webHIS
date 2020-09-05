@@ -9,29 +9,36 @@
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
+
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none !important;
+                margin: 0;
+            }
+    
     td{
         vertical-align: middle !important;
     }
   </style>
   <script>
       window.onload = function () {
-        var selectAll = document.getElementById("selectAll");// 获取全选元素
-        var ggs = document.getElementsByName("gg");
-        function ff(flag) {
-            for (var i = 0; i < ggs.length; i++) {
-          ggs[i].checked = flag;
-              }
-          }
+          var selectAll = document.getElementById("selectAll");// 获取全选元素
+          var ggs = document.getElementsByName("gg");
+          function ff(flag) {
+              for (var i = 0; i < ggs.length; i++) {
+            ggs[i].checked = flag;
+                }
+            }
 
-        selectAll.onclick = function () {
-              if (selectAll.checked) {
-                document.getElementById("pp").innerHTML = '';
-                ff(true);
-              } else {
-            document.getElementById("pp").innerHTML = '';
-              ff(false)
+          selectAll.onclick = function () {
+                if (selectAll.checked) {
+                  document.getElementById("pp").innerHTML = '';
+                  ff(true);
+                } else {
+              document.getElementById("pp").innerHTML = '';
+                ff(false)
+            }  
           }  
-        }  
       }
 
   </script>
@@ -39,24 +46,39 @@
 <body>
   <div id="app">
     <!-- 导航栏，包括搜索框、新增、导入 -->
-    <hr>
-    <template>
-      <el-select v-model="value" filterable placeholder="请选择">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </template>
-    <el-button type="primary" icon="el-icon-search">搜索</el-button>
-    <el-button type="primary" icon="el-icon-document-add" class="adddrug">
-      新增药品
-    </el-button>
-    <el-button type="primary" icon="el-icon-folder-checked" class="importdrug">
-      导入药品
-    </el-button>
+    <el-row class="demo-autocomplete">
+    <el-col>
+         <el-autocomplete
+           class="inline-input"
+           v-model="opname"
+           :fetch-suggestions="querySearch"
+           placeholder="请输入内容"
+           @select="handleSelect"
+         ></el-autocomplete>
+		 <el-button type="primary" icon="el-icon-search" @click="opselect">搜索</el-button>
+		 <el-button type="primary" icon="el-icon-document-add" class="adddrug" @click="clearFun() ">
+		   新增药品
+		 </el-button>
+		 <el-button type="primary" icon="el-icon-folder-checked" class="importdrug">
+		   导入药品
+		 </el-button>
+       </el-col>
+    </el-row>
+	<el-dialog title="药品信息" :visible.sync="dialogInfoVisible">
+			<div v-if="opitem!==null">
+				药品编码：{{opitem.did}}<br/>
+				药品名称：{{opitem.dname}}<br/>
+				药品规格：{{opitem.dsize}}<br/>
+				药品助记码：{{opitem.drem}}<br/>
+				药品单位：{{opitem.dunit}}<br/>
+				药品单价：{{opitem.dprice}}<br/>
+				药品剂型：{{opitem.dmodel}}<br/>
+				药品类型：{{opitem.dtype}}<br/>
+			</div>
+    <div slot="footer" class="dialog-footer">
+      <el-button type="primary" @click="dialogInfoVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
     <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
      <!-- 页面表格 -->
     <table class="table table-hover">
@@ -77,6 +99,7 @@
           </tr>
       </thead>
       <tbody>
+       
          <tr v-for="(d,index) in drugs"  v-show="d.isShow">
           <td ><input type="checkbox" name="gg"></td> 
           <td >{{d.did}}</td>
@@ -87,28 +110,106 @@
           <td>{{d.dmodel}}</td>
           <td>{{d.dtype}}</td>
           <td>
-            <el-button size="mini" @click="updateFun(index)">修改</el-button>
+            <el-button size="mini"    @click="updateFun(index)">修改</el-button>
             <el-button size="mini"  type="danger" @click="delFun(index)">删除</el-button>  
           </td>
+          </tr>
       </tbody>
   </table>
-
+ 
   <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-
+  
   <!-- 页面功能 -->
+
+  <!-- 批量删除 -->
   <el-button type="primary" icon="el-icon-delete" @click="batchdelFun()">
     批量删除
-    </el-button>
-  <!-- <button type="button" class="btn btn-primary btn-sm"  @click="batchdelFun()">批量删除</button> -->
-  <div v-show="isShowflag">
-      药品名称：<input type="text" v-model="newname">
-      <br>
-      药品价格：<input type="text"  v-model="newprice">
-      <button @click="saveUpdata()">保存</button>
-      <button @click="isShowflag=false">取消</button>
+  </el-button>
+  <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
-  </div>
+  <!-- 编辑药品 -->
+    <el-dialog title="编辑药品" :visible.sync="dialogFormVisible2">
+        <el-form :model="form" >
+           
+            <el-form-item label="药品编码" :label-width="formLabelWidth"   style="display:inline-block;width:350px;" >
+                <el-input type="number" v-model="drugsitem.id"   autocomplete="off" placeholder="药品编码14位数字"  >
+                
+                </el-input>
+            </el-form-item>
+            
+            <el-form-item label="药品名称" :label-width="formLabelWidth" style="display:inline-block;width:350px;" >
+                <el-input type="text"  v-model="drugsitem.name" autocomplete="off" placeholder="请输入药品名称"></el-input>
+            </el-form-item>
+            <el-form-item label="药品助记码" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+                <el-input v-model="drugsitem.rem" autocomplete="off" placeholder="请输入药品助记码"></el-input>
+            </el-form-item>
+            <el-form-item label="药品规格" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+                <el-input v-model="drugsitem.size" autocomplete="off" placeholder="请输入药品规格"></el-input>
+            </el-form-item>
+            <el-form-item label="药品单位" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+                <el-input v-model="drugsitem.unit" autocomplete="off" placeholder="请输入药品单位"></el-input>
+            </el-form-item>
+            <el-form-item label="药品单价" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+                <el-input type="number" v-model="drugsitem.price" autocomplete="off" placeholder="请输入药品单价"></el-input>
+            </el-form-item>
+            <el-form-item label="药品剂型" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+                <el-input v-model="drugsitem.model" autocomplete="off" placeholder="请输入药品剂型"></el-input>
+            </el-form-item>
+            <el-form-item label="药品类型" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+            <el-select v-model="drugsitem.type" placeholder="请选择药品类型" style="display:inline-block;width:259px;">
+                <el-option label="中成药" value="中成药"></el-option>
+                <el-option label="西药" value="西药"></el-option>
+            </el-select>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible2 = false">取 消</el-button>
+            <el-button type="primary" @click="saveUpdata()">确 定</el-button>
+        </div>
+    </el-dialog>
+    
+  <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. -->
 
+  <!-- 新增药品 -->
+  <el-dialog title="新增药品" :visible.sync="dialogFormVisible">
+    <el-form  :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+       
+        <el-form-item label="药品编码" :label-width="formLabelWidth"   style="display:inline-block;width:350px;"  prop="did">
+            <el-input type="number" v-model="ruleForm.did"   autocomplete="off" placeholder="药品编码14位数字"  >
+            
+            </el-input>
+        </el-form-item>
+        
+        <el-form-item label="药品名称" :label-width="formLabelWidth" style="display:inline-block;width:350px;" prop="dname" >
+            <el-input type="text"  v-model="ruleForm.dname" autocomplete="off" placeholder="请输入药品名称"></el-input>
+        </el-form-item>
+        <el-form-item label="药品助记码" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+            <el-input v-model="ruleForm.drem" autocomplete="off" placeholder="请输入药品助记码"></el-input>
+        </el-form-item>
+        <el-form-item label="药品规格" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+            <el-input v-model="ruleForm.dsize" autocomplete="off" placeholder="请输入药品规格"></el-input>
+        </el-form-item>
+        <el-form-item label="药品单位" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+            <el-input v-model="ruleForm.dunit" autocomplete="off" placeholder="请输入药品单位"></el-input>
+        </el-form-item>
+        <el-form-item label="药品单价" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+            <el-input  type="number" v-model="ruleForm.dprice" autocomplete="off" placeholder="请输入药品单价"></el-input>
+        </el-form-item>
+        <el-form-item label="药品剂型" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+            <el-input v-model="ruleForm.dmodel" autocomplete="off" placeholder="请输入药品剂型"></el-input>
+        </el-form-item>
+        <el-form-item label="药品类型" :label-width="formLabelWidth" style="display:inline-block;width:350px;">
+        <el-select v-model="ruleForm.dtype" placeholder="请选择药品类型" style="display:inline-block;width:259px;">
+            <el-option label="中成药" value="中成药"></el-option>
+            <el-option label="西药" value="西药"></el-option>
+        </el-select>
+        </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addFun('ruleForm')">确 定</el-button>
+    </div>
+</el-dialog>
   <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. -->
     
   </div>
@@ -122,121 +223,177 @@
       el: '#app',
       data() {
         return {
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+        options: [],
+		opindex:null,
+		opname:"",
+		opitem:null,
         value: '',
         drugs:[{
-          did: '2016-05-03',
-          dname: '王小虎',
+          did: '85168787002583',
+          dname: '风湿寒痛片',
           drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.01,
-          dmodel: '针剂',
+          dsize: '250g/瓶',
+          dunit: '瓶',
+          dprice: 12.89,
+          dmodel: '颗粒剂',
           dtype: '中成药',
           isShow:true
         }, {
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
+          did: '85168787020019',
+          dname: '板蓝根颗粒',
+          drem: '112',
+          dsize: '30g/袋',
           dunit: '袋',
-          dprice: 12.02,
-          dmodel: '针剂',
+          dprice: 5.30,
+          dmodel: '颗粒剂',
           dtype: '中成药',
           isShow:true
         }, {
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.03,
-          dmodel: '针剂',
+          did: '85168787020107',
+          dname: '香砂养胃丸',
+          drem: '113',
+          dsize: '25g/粒',
+          dunit: '盒',
+          dprice: 25.00,
+          dmodel: '丸剂',
           dtype: '中成药',
           isShow:true
         }, {
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.04,
-          dmodel: '针剂',
+          did: '85168787020074',
+          dname: '补中益气丸',
+          drem: '114',
+          dsize: '25g/粒',
+          dunit: '盒',
+          dprice: 15.40,
+          dmodel: '丸剂',
           dtype: '中成药',
           isShow:true
         }, {
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.05,
-          dmodel: '针剂',
+          did: '85168787020100',
+          dname: '半夏糖浆',
+          drem: '115',
+          dsize: '100ml/瓶',
+          dunit: '盒',
+          dprice: 18.70,
+          dmodel: '糖浆剂',
           dtype: '中成药',
           isShow:true
         }, {
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.06,
-          dmodel: '针剂',
+          did: '85168787202112',
+          dname: '乌鸡白凤丸',
+          drem: '116',
+          dsize: '25g/粒',
+          dunit: '盒',
+          dprice: 32.50,
+          dmodel: '丸剂',
           dtype: '中成药',
           isShow:true
         }, {
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.07,
-          dmodel: '针剂',
-          dtype: '中成药',
+          did: '85168787020031',
+          dname: '脑心舒口服液',
+          drem: '117',
+          dsize: '100ml/瓶',
+          dunit: '盒',
+          dprice: 9.80,
+          dmodel: '糖浆剂',
+          dtype: '西药',
           isShow:true
         }],
-        isShowflag:false,
-        newid: '',
-        newname: '',
-        newrem: '',
-        newsize: '',
-        newunit: '',
-        newprice: 0,
-        newmodel: '',
-        newtype: '',
+        drugsitem:{id:'',name:'',rem:'',size:'',unit:'',price:'',model:'',type:''},
+        // isShowflag:false,
+ 
         updateIndex:-1,
+        dialogInfoVisible:false,
+        dialogFormVisible: false,
         
+        dialogFormVisible2: false,
+        temp: {
+        did: '',
+        dname: '',
+        drem: '',
+        dsize: '',
+        dunit: '',
+        dprice: '',
+        dmodel: '',
+        dtype: '',
+        isShow:true
+        },
+        ruleForm: {
+        did: '',
+        dname: '',
+        drem: '',
+        dsize: '',
+        dunit: '',
+        dprice: '',
+        dmodel: '',
+        dtype: '',
+        isShow:true
+        },
+        formLabelWidth: '90px',
+        // ruleForm: {
+        //   did: '',
+        //   dname: '',
+         
+        // },
+        rules: {
+          did: [
+            { required: true, message: '请输入药品编码', trigger: 'blur' },
+            { min:14, max: 14, message: '长度14位数字', trigger: 'blur' }
+          ],
+          dname: [
+            { required: true, message: '请输入药品名称', trigger:  'blur'  }
+          ],
+        }
 
         }
       
       },
       methods: {
-        updateFun:function(i){
-                    this.isShowflag=true
+		  querySearch(queryString, cb) {
+		          var options = this.options;
+		          var results = queryString ? options.filter(this.createFilter(queryString)) : options;
+		          // 调用 callback 返回建议列表的数据
+		          cb(results);
+		        },
+		  createFilter(queryString) {
+		          return (option) => {
+		            return (option.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+		          };
+		  },
+		  handleSelect(selitem) {
+			  this.opindex=selitem.index
+		    this.opitem=this.drugs[selitem.index]
+		  },
+		  opselect:function(){
+			  console.log(this.opitem)
+			  this.dialogInfoVisible=true
+		  },
+            updateFun:function(i){
+                    this.dialogFormVisible2 = true
                     this.updateIndex =i
+                    this.drugsitem.id = this.drugs[this.updateIndex].did
+                    this.drugsitem.name = this.drugs[this.updateIndex].dname
+                    this.drugsitem.rem = this.drugs[this.updateIndex].drem
+                    this.drugsitem.size = this.drugs[this.updateIndex].dsize
+                    this.drugsitem.unit = this.drugs[this.updateIndex].dunit
+                    this.drugsitem.price = this.drugs[this.updateIndex].dprice
+                    this.drugsitem.model = this.drugs[this.updateIndex].dmodel
+                    this.drugsitem.type = this.drugs[this.updateIndex].dtype
+                    
                 },
             saveUpdata:function(){
-                    this.drugs[this.updateIndex].dname = this.newname
-                    this.drugs[this.updateIndex].dprice = this.newprice
-                    this.isShow=false
+                    this.drugs[this.updateIndex].did = this.drugsitem.id
+                    this.drugs[this.updateIndex].drem = this.drugsitem.rem
+                    this.drugs[this.updateIndex].dsize = this.drugsitem.size
+                    this.drugs[this.updateIndex].dunit = this.drugsitem.unit
+                    this.drugs[this.updateIndex].dmodel = this.drugsitem.model
+                    this.drugs[this.updateIndex].dtype = this.drugsitem.type
+                    this.drugs[this.updateIndex].dname = this.drugsitem.name
+                    this.drugs[this.updateIndex].dprice = this.drugsitem.price
+                    this.dialogFormVisible2 = false
                 },
             delFun:function(i){
-                    this.$confirm("您确定要删除药品"+this.drugs[i].dname+"吗", "提示", {
+                    this.$confirm('您确定要删除药品'+this.drugs[i].dname+'吗', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -304,23 +461,6 @@
                       message: '已取消删除'
                     });          
                   });
-
-
-                    // let r=confirm("您确定要删除吗")
-                    // if(r==true){
-                    //     for(var k=0;k<checkflag.length;k++){
-                    //         cks[k].checked=false
-                    //         if(checkflag[k]==1)
-                    //         {
-                    //             this.drugs[k].isShow=false
-                    //             checkflag[k]=0
-                                
-                    //         }    
-                            
-
-                    //     }
-                    //     console.log(checkflag)
-                    //     console.log(cks)  
                     }
                     
                     
@@ -331,9 +471,74 @@
                   });
                     
                 }                     
-            }           
-    }
+            },
+            clearFun(){
+                this.dialogFormVisible = true
+                this.ruleForm.did=""
+                this.ruleForm.dname=""
+                this.ruleForm.drem=""
+                this.ruleForm.dsize=""
+                this.ruleForm.dunit=""
+                this.ruleForm.dprice=""
+                this.ruleForm.dmodel=""
+                this.ruleForm.dtype=""
+
+                // this.form.did=""
+                // this.form.dname=""
+                // this.form.drem=""
+                // this.form.dsize=""
+                // this.form.dunit=""
+                // this.form.dprice=""
+                // this.form.dmodel=""
+                // this.form.dtype=""
+                // console.log("1"+this.form)
+            },
+            addFun(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                      // this.form.did=this.ruleForm.did
+                      // this.form.dname=this.ruleForm.dname
+                      this.temp.did=this.ruleForm.did
+                      
+                      this.temp.dname=this.ruleForm.dname
+                      this.temp.drem=this.ruleForm.drem
+                      this.temp.dsize=this.ruleForm.dsize
+                      this.temp.dunit=this.ruleForm.dunit
+                      this.temp.dprice=this.ruleForm.dprice
+                      this.temp.dmodel=this.ruleForm.dmodel
+                      this.temp.dtype=this.ruleForm.dtype
+                      this.drugs.push(this.temp)
+                      this.dialogFormVisible = false
+                      this.$message('新增成功');
+                      
+                    } else {
+                      console.log('error submit!!');
+                      return false;
+                    }
+                  });
+                
+                
+                
+                // console.log(this.form)
+            }
+            
+
+        },
+		mounted() {
+		  for(let i in this.drugs ){
+			  let tmp ={
+				  "value":this.drugs[i].dname,
+				  "index":i
+			  }
+			  this.options.push(tmp)
+		  }
+		  console.log(this.options)
+		},
+        
+        
 
     })
   </script>
 </html>
+
+

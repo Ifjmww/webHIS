@@ -44,8 +44,8 @@
 							<span>挂号收费</span>
 							</template>
 							<el-menu-item-group>
-							<el-menu-item index="1-1" @click='selitem($event,"1-1")'>选项1</el-menu-item>
-							<el-menu-item index="1-2" @click='selitem($event,"1-2")'>选项1</el-menu-item>
+							<el-menu-item index="1-1" @click='selitem($event,"1-1")'>挂号</el-menu-item>
+							<el-menu-item index="1-2" @click='selitem($event,"1-2")'>收费</el-menu-item>
 							</el-menu-item-group>
 							</el-submenu>
 											  		  					
@@ -55,8 +55,8 @@
 							<span>门诊医生</span>
 							</template>
 							<el-menu-item-group>
-							<el-menu-item index="2-1" @click='selitem($event,"2-1")'>选项1</el-menu-item>
-							<el-menu-item index="2-2"  @click='selitem($event,"2-2")'>选项1</el-menu-item>
+							<el-menu-item index="2-1" @click='selitem($event,"2-1")'>医生管理</el-menu-item>
+							<el-menu-item index="2-2"  @click='selitem($event,"2-2")'>医生排班</el-menu-item>
 							</el-menu-item-group>
 							</el-submenu>
 						  		  					  
@@ -66,8 +66,8 @@
 						  	<span>医技处置</span>
 						  	</template>
 						  	<el-menu-item-group>
-						  	<el-menu-item index="3-1" @click='selitem($event,"3-1")'>选项1</el-menu-item>
-						  	<el-menu-item index="3-2" @click='selitem($event,"3-2")'>选项1</el-menu-item>
+						  	<el-menu-item index="3-1" @click='selitem($event,"3-1")'>医技医生</el-menu-item>
+						  	<el-menu-item index="3-2" @click='selitem($event,"3-2")'>医技设备</el-menu-item>
 						  	</el-menu-item-group>
 						  	</el-submenu>
 							
@@ -77,8 +77,8 @@
 						  	<span>药房管理</span>
 						  	</template>
 						  	<el-menu-item-group>
-						  	<el-menu-item index="4-1" @click='selitem($event,"4-1")'>选项1</el-menu-item>
-						  	<el-menu-item index="4-2" @click='selitem($event,"4-2")'>选项1</el-menu-item>
+						  	<el-menu-item index="4-1" @click='selitem($event,"4-1")'>药品管理</el-menu-item>
+						  	<el-menu-item index="4-2" @click='selitem($event,"4-2")'>药品采购</el-menu-item>
 						  	</el-menu-item-group>
 						  	</el-submenu>
 						  		  						  
@@ -88,8 +88,8 @@
 						  	<span>财务管理</span>
 						  	</template>
 						  	<el-menu-item-group>
-						  	<el-menu-item index="5-1" @click='selitem($event,"5-1")'>选项1</el-menu-item>
-						  	<el-menu-item index="5-2" @click='selitem($event,"5-2")'>选项1</el-menu-item>
+						  	<el-menu-item index="5-1" @click='selitem($event,"5-1")'>财务管理</el-menu-item>
+						  	<el-menu-item index="5-2" @click='selitem($event,"5-2")'>财务报表</el-menu-item>
 						  	</el-menu-item-group>
 						  	</el-submenu>
 						  		  							
@@ -99,8 +99,8 @@
 						  	<span>系统信息</span>
 						  	</template>
 						  	<el-menu-item-group>
-						  	<el-menu-item index="6-1" @click='selitem($event,"6-1")'>选项1</el-menu-item>
-						  	<el-menu-item index="6-2" @click='selitem($event,"6-2")'>选项1</el-menu-item>
+						  	<el-menu-item index="6-1" @click='selitem($event,"6-1")'>科室管理</el-menu-item>
+						  	<el-menu-item index="6-2" @click='selitem($event,"6-2")'>关于系统</el-menu-item>
 						  	</el-menu-item-group>
 						  	</el-submenu>
 					</el-menu>
@@ -131,15 +131,25 @@
 		el: '#app',
 		data: {
 			nameindex:[
-				{index:"0-1",name:"吉大一院",html:"http://www.baidu.com"},
-				{index:"1-1",name:"选项一",html:"login.html"},
-				{index:"1-2",name:"毒品",html:"drug.html"}
+				{index:"0-1",name:"默认页",html:"default.html"},
+				{index:"1-1",name:"挂号",html:"register.html"},
+				{index:"1-2",name:"收费",html:"pay.html"},
+				{index:"2-1",name:"医生管理",html:"doctor.html"},
+				{index:"2-2",name:"医生排班",html:"docplan.html"},
+				{index:"3-1",name:"医技医生",html:"devdoct.html"},
+				{index:"3-2",name:"医技设备",html:"device.html"},
+				{index:"4-1",name:"药品管理",html:"drug.html"},
+				{index:"4-2",name:"药品采购",html:"drugbuy.html"},
+				{index:"5-1",name:"财务管理",html:"finance.html"},
+				{index:"5-2",name:"财务报表",html:"financerep.html"},
+				{index:"6-1",name:"科室管理",html:"office.html"},
+				{index:"6-2",name:"关于系统",html:"info.html"},
 			],
 			editableTabsValue: '0-1',
 			editableTabs: [{
 			  title: '默认页',
 			  name: '0-1',
-			  content: 'office.html'
+			  content: 'default.html'
 			}],
 			tabIndex: 1,
 			username:"",
