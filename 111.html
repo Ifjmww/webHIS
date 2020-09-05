@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+    
+  
+
+</head>
+<body>
+    <iframe id="content" src="index.html" style="width:100% " frameborder="0" ></iframe>
+</body>
+
+<script>
+    reSetSize();
+        window.onresize = reSetSize;
+        function reSetSize() {
+            var windowsHeight = window.innerHeight;
+            console.log(document.body.clientHeigh)
+            document.getElementById("content").style.height = (document.documentElement.clientHeight) + "px";
+        }
+</script>
+</html>
