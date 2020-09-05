@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" type="text/css" href="./css/drug.css"  >
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    td{
+        vertical-align: middle !important;
+    }
+  </style>
+  <script>
+      window.onload = function () {
+        var selectAll = document.getElementById("selectAll");// 获取全选元素
+        var ggs = document.getElementsByName("gg");
+        function ff(flag) {
+            for (var i = 0; i < ggs.length; i++) {
+          ggs[i].checked = flag;
+              }
+          }
+
+        selectAll.onclick = function () {
+              if (selectAll.checked) {
+                document.getElementById("pp").innerHTML = '';
+                ff(true);
+              } else {
+            document.getElementById("pp").innerHTML = '';
+              ff(false)
+          }  
+        }  
+      }
+
+  </script>
+</head>
+<body>
+  <div id="app">
+    <!-- 导航栏，包括搜索框、新增、导入 -->
+    <hr>
+    <template>
+      <el-select v-model="value" filterable placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+    </template>
+    <el-button type="primary" icon="el-icon-search">搜索</el-button>
+    <el-button type="primary" icon="el-icon-document-add" class="adddrug">
+      新增药品
+    </el-button>
+    <el-button type="primary" icon="el-icon-folder-checked" class="importdrug">
+      导入药品
+    </el-button>
+    <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+     <!-- 页面表格 -->
+    <table class="table table-hover">
+        
+      <thead>
+          <tr>
+              <th><input type="checkbox" id="selectAll"></th>
+              <span id="pp"></span>
+              <th>药品编码</th>
+              <th>药品名称</th>
+              <th>药品规格</th>
+              <th>药品单位</th>
+              <th>药品单价</th>
+              <th>药品剂型</th>
+              <th>药品类型</th>
+              <th colspan="2">操作</th>
+              
+          </tr>
+      </thead>
+      <tbody>
+         <tr v-for="(d,index) in drugs"  v-show="d.isShow">
+          <td ><input type="checkbox" name="gg"></td> 
+          <td >{{d.did}}</td>
+          <td >{{d.dname}}</td>
+          <td>{{d.dsize}}</td>
+          <td>{{d.dunit}}</td>
+          <td>{{d.dprice}}</td>
+          <td>{{d.dmodel}}</td>
+          <td>{{d.dtype}}</td>
+          <td>
+            <el-button size="mini" @click="updateFun(index)">修改</el-button>
+            <el-button size="mini"  type="danger" @click="delFun(index)">删除</el-button>  
+          </td>
+      </tbody>
+  </table>
+
+  <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+
+  <!-- 页面功能 -->
+  <el-button type="primary" icon="el-icon-delete" @click="batchdelFun()">
+    批量删除
+    </el-button>
+  <!-- <button type="button" class="btn btn-primary btn-sm"  @click="batchdelFun()">批量删除</button> -->
+  <div v-show="isShowflag">
+      药品名称：<input type="text" v-model="newname">
+      <br>
+      药品价格：<input type="text"  v-model="newprice">
+      <button @click="saveUpdata()">保存</button>
+      <button @click="isShowflag=false">取消</button>
+
+  </div>
+
+  <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. -->
+    
+  </div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+        options: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        value: '',
+        drugs:[{
+          did: '2016-05-03',
+          dname: '王小虎',
+          drem: '111',
+          dsize: '上海市普陀区金沙江路 1518 弄',
+          dunit: '袋',
+          dprice: 12.01,
+          dmodel: '针剂',
+          dtype: '中成药',
+          isShow:true
+        }, {
+          did: '2016-05-03',
+          dname: '王小虎',
+          drem: '111',
+          dsize: '上海市普陀区金沙江路 1518 弄',
+          dunit: '袋',
+          dprice: 12.02,
+          dmodel: '针剂',
+          dtype: '中成药',
+          isShow:true
+        }, {
+          did: '2016-05-03',
+          dname: '王小虎',
+          drem: '111',
+          dsize: '上海市普陀区金沙江路 1518 弄',
+          dunit: '袋',
+          dprice: 12.03,
+          dmodel: '针剂',
+          dtype: '中成药',
+          isShow:true
+        }, {
+          did: '2016-05-03',
+          dname: '王小虎',
+          drem: '111',
+          dsize: '上海市普陀区金沙江路 1518 弄',
+          dunit: '袋',
+          dprice: 12.04,
+          dmodel: '针剂',
+          dtype: '中成药',
+          isShow:true
+        }, {
+          did: '2016-05-03',
+          dname: '王小虎',
+          drem: '111',
+          dsize: '上海市普陀区金沙江路 1518 弄',
+          dunit: '袋',
+          dprice: 12.05,
+          dmodel: '针剂',
+          dtype: '中成药',
+          isShow:true
+        }, {
+          did: '2016-05-03',
+          dname: '王小虎',
+          drem: '111',
+          dsize: '上海市普陀区金沙江路 1518 弄',
+          dunit: '袋',
+          dprice: 12.06,
+          dmodel: '针剂',
+          dtype: '中成药',
+          isShow:true
+        }, {
+          did: '2016-05-03',
+          dname: '王小虎',
+          drem: '111',
+          dsize: '上海市普陀区金沙江路 1518 弄',
+          dunit: '袋',
+          dprice: 12.07,
+          dmodel: '针剂',
+          dtype: '中成药',
+          isShow:true
+        }],
+        isShowflag:false,
+        newid: '',
+        newname: '',
+        newrem: '',
+        newsize: '',
+        newunit: '',
+        newprice: 0,
+        newmodel: '',
+        newtype: '',
+        updateIndex:-1,
+        
+
+        }
+      
+      },
+      methods: {
+        updateFun:function(i){
+                    this.isShowflag=true
+                    this.updateIndex =i
+                },
+            saveUpdata:function(){
+                    this.drugs[this.updateIndex].dname = this.newname
+                    this.drugs[this.updateIndex].dprice = this.newprice
+                    this.isShow=false
+                },
+            delFun:function(i){
+                    this.$confirm("您确定要删除药品"+this.drugs[i].dname+"吗", "提示", {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                  }).then(() => {
+                    this.drugs.splice(i,1)
+                    this.$message({
+                      type: 'success',
+                      message: '删除成功!'
+                    });
+                  }).catch(() => {
+                    this.$message({
+                      type: 'info',
+                      message: '已取消删除'
+                    });          
+                  });
+                    //console.log(i);
+                    // let r=confirm("您确定要删除"+this.drugs[i].dname+"吗")
+                    // if(r==true){
+                    //     this.drugs.splice(i,1)
+                    // }
+                },
+                
+            batchdelFun:function(){
+
+                let checkflag=[]
+                let flag=false
+                let cks=document.getElementsByName("gg");
+                for(var i=0;i<cks.length;i++){
+                    if(cks[i].checked==true){
+                        checkflag[i]=1
+                    }
+                    else{
+                        checkflag[i]=0
+                    }
+                }
+                for(var m=0;m<checkflag.length;m++){
+                    if(checkflag[m]==1)
+                    {
+                        flag=true
+                        break
+                    }
+                }
+                console.log(flag+"1")
+                if(flag==true){
+                  this.$confirm('您确定要执行批量删除吗', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                  }).then(() => {
+                    for(var k=0;k<checkflag.length;k++){
+                            cks[k].checked=false
+                            if(checkflag[k]==1)
+                            {
+                                this.drugs[k].isShow=false
+                                checkflag[k]=0  
+                            }    
+                        }
+                    this.$message({
+                      type: 'success',
+                      message: '删除成功!'
+                    });
+                  }).catch(() => {
+                    this.$message({
+                      type: 'info',
+                      message: '已取消删除'
+                    });          
+                  });
+
+
+                    // let r=confirm("您确定要删除吗")
+                    // if(r==true){
+                    //     for(var k=0;k<checkflag.length;k++){
+                    //         cks[k].checked=false
+                    //         if(checkflag[k]==1)
+                    //         {
+                    //             this.drugs[k].isShow=false
+                    //             checkflag[k]=0
+                                
+                    //         }    
+                            
+
+                    //     }
+                    //     console.log(checkflag)
+                    //     console.log(cks)  
+                    }
+                    
+                    
+                
+                else{
+                  this.$alert('未选择要删除的项！', '错误！', {
+                  confirmButtonText: '确定',
+                  });
+                    
+                }                     
+            }           
+    }
+
+    })
+  </script>
+</html>

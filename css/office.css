@@ -21,7 +21,9 @@
 	float: left;
 	margin-left: 50px;
 }
-.main{
-	width: 100%;
-	background-color: yellow;
+.main .tableback{
+	background-color: #f3f3f3;
+}
+.main .page{
+	text-align: center;
 }

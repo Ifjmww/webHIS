@@ -27,8 +27,28 @@
 	    </div>
 	  </el-dialog>
 	  
+	  <el-dialog title="修改科室信息" :visible.sync="dialogUpdateVisible">
+	  		<el-form :model="formoffice">
+	  		    <el-form-item label="科室名称" >
+	  		      <el-input v-model="opvalue" autocomplete="off"></el-input>
+	  		    </el-form-item>
+	  		    <el-form-item label="科室类别" >
+	  		      <el-input v-model="opclass" autocomplete="off"></el-input>
+	  		    </el-form-item>
+	  				<el-form-item label="科室类型" >
+	  				  <el-input v-model="optype" autocomplete="off"></el-input>
+	  				</el-form-item>
+	  		  </el-form>
+	    
+	    <div slot="footer" class="dialog-footer">
+	  			<el-button @click="dialogUpdateVisible = false">取 消</el-button>
+	    <el-button type="primary" @click="updateoffice">确 定</el-button>
+	    </div>
+	  </el-dialog>
+	  
 	  <el-dialog title="科室信息" :visible.sync="dialogInfoVisible">
 		<div v-if="item!==null">
+			科室编号：{{index}}<br/>
 			科室名称：{{item.value}}<br/>
 			科室分类：{{item.class}}<br/>
 			科室类型：{{item.type}}<br/>
@@ -61,6 +81,67 @@
 		 
 	  </div>
 	  <div class="main">
+		  <div class="tableback">
+			  
+			  <el-table
+			      ref="multipleTable"
+			      :data="offices.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+			      tooltip-effect="dark"
+			      style="width: 100%"
+			      @selection-change="handleSelectionChange">
+
+			      <el-table-column
+			        type="selection"
+			        width="55">
+			      </el-table-column>
+
+			      <el-table-column
+			            type="index"
+						:index=((currentPage-1)*pageSize)
+						label="编号"
+			            width="50">
+			          </el-table-column>
+			      <el-table-column
+			        prop="value"
+			        label="科室名称"
+			        width="240">
+			      </el-table-column>
+			      <el-table-column
+			        prop="class"
+			        label="科室分类"
+			        width="240">
+			      </el-table-column>
+			  		<el-table-column
+			  		prop="type"
+			  		label="科室类型"
+			  		width="240">
+			  		</el-table-column>
+			  		<el-table-column
+			  		label="操作"
+			  		width="240">
+					<template slot-scope="scope">
+			  		<el-button type="primary" @click="handleEdit(scope.$index)">修改</el-button>
+			  		<el-button type="danger" @click="handleRemove(scope.$index)">删除</el-button>
+			  		</template>
+					</el-table-column>
+			    </el-table>
+				<div class="page">
+					<el-pagination
+					  @size-change="handleSizeChange"
+					  @current-change="handleCurrentChange"
+					  :current-page="currentPage"
+					  :page-size="pageSize"
+					  background
+					  layout="prev, pager, next"
+					  :total="parseInt(total)">
+					</el-pagination>
+				</div>
+			    <div style="margin-top: 20px">
+			      <el-button @click="toggleSelection([offices[1], offices[2]])">切换第二、第三行的选中状态</el-button>
+			      <el-button @click="toggleSelection()">取消选择</el-button>
+			    </div>
+		  </div>
+		  
 	  </div>
   </div>
 </body>
@@ -72,27 +153,37 @@
     new Vue({
       el: '#app',
       data: {
-		  restaurants: [],
+		  offices: [],
 		  name: '',
 		  item:null,
+		  index:null,
+		  opindex:null,
+		  opvalue:'',
+		  opclass:"",
+		  optype:'',
+		  multipleSelection: [],
 		  dialogInfoVisible: false,
 		  dialogFormVisible: false,
+		  dialogUpdateVisible: false,
 		  formoffice:{
 			  'value':"",
 			  'class':"",
 			  'type':""
-		  }
+		  },
+		  currentPage: 1,
+		  pageSize: 5,
+		  total: 0
 	  },
     methods: {
       querySearch(queryString, cb) {
-              var restaurants = this.restaurants;
-              var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+              var offices = this.offices;
+              var results = queryString ? offices.filter(this.createFilter(queryString)) : offices;
               // 调用 callback 返回建议列表的数据
               cb(results);
             },
       createFilter(queryString) {
-              return (restaurant) => {
-                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+              return (office) => {
+                return (office.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
               };
       },
       loadAll() {
@@ -106,15 +197,22 @@
 			{"value":"脑外科","class":"外科","type":"临床"},
 			{"value":"心外科","class":"外科","type":"临床"},
 			{"value":"眼科","class":"五官科","type":"临床"},
-			{"value":"耳鼻喉科","class":"五官科","type":"临床"},
+			{"value":"耳鼻喉科","class":"五官科","type":"临床"}
         ];
       },
       handleSelect(selitem) {
         this.item=selitem
+		for(let i in this.offices){
+			if(this.offices[i].value==this.name){
+				this.index=i
+				break
+			}
+		}
       },
 	  searchoffice:function(){
 	  	if(this.item!=null&&this.item.value==this.name){
 			this.dialogInfoVisible = true
+			this.toggleSelection([this.offices[1]])
 		}else{
 			this.$message.error('未找到对应科室');
 		}
@@ -123,16 +221,69 @@
 		  if(this.formoffice.value==""||this.formoffice.class==""||this.formoffice.type==""){
 			  this.$message.error('字段不能为空值');
 		  }else{
+			  let tmp={
+				  "value":this.formoffice.value,
+				  "class":this.formoffice.class,
+				  "type":this.formoffice.type
+			  }
+		  this.offices.push(tmp)
+		  console.log(this.offices)
+		  this.total=this.offices.length
 		  this.dialogFormVisible = false
-		  this.restaurants.push(this.formoffice)
-		  this.form.value=""
-		  this.form.class=""
-		  this.form.type=""
+		  this.formoffice.value=""
+		  this.formoffice.class=""
+		  this.formoffice.type=""
 		  }
-	  }
-    },
+	  },
+	  updateoffice:function(){
+		  this.dialogUpdateVisible = false
+		  this.offices[this.opindex]={
+			  'value':this.opvalue,
+			  'class':this.opclass,
+			  'type':this.optype
+		  }
+		  this.opvalue=''
+		  this.opclass=''
+		  this.optype=''
+		  this.$message({
+		            message: '修改成功',
+		            type: 'success'
+		          });
+	  },
+	  handleEdit(index) {
+			  this.opindex=index
+	          this.opvalue=this.offices[index].value
+			  this.opclass=this.offices[index].class
+			  this.optype=this.offices[index].type
+			  this.dialogUpdateVisible=true
+	        },
+	  handleRemove(index) {
+	        this.offices.splice(index,1)
+	  },
+	  toggleSelection(rows) {
+	          if (rows) {
+	            rows.forEach(row => {
+	              this.$refs.multipleTable.toggleRowSelection(row);
+	            });
+	          } else {
+	            this.$refs.multipleTable.clearSelection();
+	          }
+	        },
+	    handleSelectionChange(val) {
+	         this.multipleSelection = val
+	        },
+			handleSizeChange(newSize) {
+			      // pagesize改变触发
+			      this.pageSize = newSize
+			    },
+			    handleCurrentChange(newPage) {
+			      // 页码改变触发
+			      this.currentPage = newPage
+			    }
+	      },
     mounted() {
-      this.restaurants = this.loadAll();
+      this.offices = this.loadAll();
+	  this.total=this.offices.length
     },
 	
     })
