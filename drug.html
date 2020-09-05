@@ -109,19 +109,8 @@
   <!-- 批量删除 -->
   <el-button type="primary" icon="el-icon-delete" @click="batchdelFun()">
     批量删除
-<<<<<<< HEAD
   </el-button>
   <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-=======
-    </el-button>
-  <!-- <button type="button" class="btn btn-primary btn-sm"  @click="batchdelFun()">批量删除</button> -->
-  <div v-show="isShowflag">
-      药品名称：<input type="text" v-model="newname">
-      <br>
-      药品价格：<input type="text"  v-model="newprice">
-      <button @click="saveUpdata()">保存</button>
-      <button @click="isShowflag=false">取消</button>
->>>>>>> 23fd123119fcd6f977d12b499fe92fd43c170c2e
 
   <!-- 编辑药品 -->
     <el-dialog title="编辑药品" :visible.sync="dialogFormVisible2">
@@ -237,7 +226,6 @@
         }],
         value: '',
         drugs:[{
-<<<<<<< HEAD
           did: '85168787002583',
           dname: '风湿寒痛片',
           drem: '111',
@@ -252,29 +240,12 @@
           dname: '板蓝根颗粒',
           drem: '112',
           dsize: '30g/袋',
-=======
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.01,
-          dmodel: '针剂',
-          dtype: '中成药',
-          isShow:true
-        }, {
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
->>>>>>> 23fd123119fcd6f977d12b499fe92fd43c170c2e
           dunit: '袋',
           dprice: 5.30,
           dmodel: '颗粒剂',
           dtype: '中成药',
           isShow:true
         }, {
-<<<<<<< HEAD
           did: '85168787020107',
           dname: '香砂养胃丸',
           drem: '113',
@@ -370,81 +341,13 @@
             { required: true, message: '请输入药品名称', trigger:  'blur'  }
           ],
         }
-=======
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.03,
-          dmodel: '针剂',
-          dtype: '中成药',
-          isShow:true
-        }, {
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.04,
-          dmodel: '针剂',
-          dtype: '中成药',
-          isShow:true
-        }, {
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.05,
-          dmodel: '针剂',
-          dtype: '中成药',
-          isShow:true
-        }, {
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.06,
-          dmodel: '针剂',
-          dtype: '中成药',
-          isShow:true
-        }, {
-          did: '2016-05-03',
-          dname: '王小虎',
-          drem: '111',
-          dsize: '上海市普陀区金沙江路 1518 弄',
-          dunit: '袋',
-          dprice: 12.07,
-          dmodel: '针剂',
-          dtype: '中成药',
-          isShow:true
-        }],
-        isShowflag:false,
-        newid: '',
-        newname: '',
-        newrem: '',
-        newsize: '',
-        newunit: '',
-        newprice: 0,
-        newmodel: '',
-        newtype: '',
-        updateIndex:-1,
-        
->>>>>>> 23fd123119fcd6f977d12b499fe92fd43c170c2e
 
         }
       
       },
       methods: {
-<<<<<<< HEAD
             updateFun:function(i){
                     this.dialogFormVisible2 = true
-=======
-        updateFun:function(i){
-                    this.isShowflag=true
->>>>>>> 23fd123119fcd6f977d12b499fe92fd43c170c2e
                     this.updateIndex =i
                     this.drugsitem.id = this.drugs[this.updateIndex].did
                     this.drugsitem.name = this.drugs[this.updateIndex].dname
@@ -468,11 +371,7 @@
                     this.dialogFormVisible2 = false
                 },
             delFun:function(i){
-<<<<<<< HEAD
                     this.$confirm('您确定要删除药品'+this.drugs[i].dname+'吗', '提示', {
-=======
-                    this.$confirm("您确定要删除药品"+this.drugs[i].dname+"吗", "提示", {
->>>>>>> 23fd123119fcd6f977d12b499fe92fd43c170c2e
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
